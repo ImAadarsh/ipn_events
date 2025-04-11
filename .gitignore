@@ -1,0 +1,25 @@
+# Environment variables
+.env
+
+# PHP Error logs
+error_log
+php_error.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.sublime-*
+
+# Composer dependencies
+/vendor/
+
+# Backup files
+*.bak
+*.swp
+*~
+
+prompts

@@ -1,0 +1,759 @@
+/* Custom styles for MISB module */
+.custom-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+}
+
+.custom-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #ffda55 0%, #ffa500 100%);
+    border-bottom: none;
+    color: #fff;
+    font-weight: 600;
+    padding: 8px 10px;
+}
+
+.stats-card {
+    padding: 25px 15px;
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    border-radius: 12px;
+    border-left: 5px solid #ffa500;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+}
+
+.stats-card i {
+    font-size: 2.5rem;
+    color: #ffa500;
+    margin-bottom: 15px;
+}
+
+.stats-card h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #343a40;
+    margin-bottom: 5px;
+}
+
+.stats-card p {
+    color: #6c757d;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.btn-custom {
+    background: linear-gradient(135deg, #ffda55 0%, #ffa500 100%);
+    border: none;
+    color: white;
+    font-weight: 500;
+    padding: 8px 20px;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.btn-custom:hover {
+    background: linear-gradient(135deg, #ffa500 0%, #ff8c00 100%);
+    box-shadow: 0 5px 15px rgba(255, 165, 0, 0.3);
+    color: white;
+}
+
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #ffa500;
+    color: #495057;
+    font-weight: 600;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(255, 165, 0, 0.05);
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #ffa500;
+    box-shadow: 0 0 0 0.2rem rgba(255, 165, 0, 0.25);
+}
+
+.form-label {
+    font-weight: 500;
+    color: #495057;
+}
+
+.badge-custom {
+    background: linear-gradient(135deg, #ffda55 0%, #ffa500 100%);
+    color: white;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+
+.eye-btn {
+    color: #ffa500;
+    background-color: rgba(255, 165, 0, 0.1);
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.eye-btn:hover {
+    background-color: #ffa500;
+    color: white;
+}
+
+.detail-heading {
+    color: #ffa500;
+    font-weight: 600;
+    border-bottom: 2px solid #ffa500;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+
+.detail-table th {
+    font-weight: 600;
+    color: #495057;
+    background-color: #f8f9fa;
+}
+
+
+/* Custom styles for ILS module */
+.custom-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.custom-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    border-bottom: none;
+    color: #fff;
+    font-weight: 600;
+    padding: 16px 20px;
+}
+
+.stats-card {
+    padding: 25px 15px;
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    border-radius: 12px;
+    border-left: 5px solid #6a11cb;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+}
+
+.stats-card i {
+    font-size: 2.5rem;
+    color: #6a11cb;
+    margin-bottom: 15px;
+}
+
+.stats-card h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #343a40;
+    margin-bottom: 5px;
+}
+
+.stats-card p {
+    color: #6c757d;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.btn-custom {
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    border: none;
+    color: white;
+    font-weight: 500;
+    padding: 8px 20px;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.btn-custom:hover {
+    background: linear-gradient(135deg, #5a0fad 0%, #1c5fcc 100%);
+    box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
+    color: white;
+}
+
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #6a11cb;
+    color: #495057;
+    font-weight: 600;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(106, 17, 203, 0.05);
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #6a11cb;
+    box-shadow: 0 0 0 0.2rem rgba(106, 17, 203, 0.25);
+}
+
+.form-label {
+    font-weight: 500;
+    color: #495057;
+}
+
+.badge-custom {
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    color: white;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+
+.badge-designation {
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 6px;
+    color: white;
+}
+
+.eye-btn {
+    color: #6a11cb;
+    background-color: rgba(106, 17, 203, 0.1);
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.eye-btn:hover {
+    background-color: #6a11cb;
+    color: white;
+}
+
+.detail-heading {
+    color: #6a11cb;
+    font-weight: 600;
+    border-bottom: 2px solid #6a11cb;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+
+.detail-table th {
+    font-weight: 600;
+    color: #495057;
+    background-color: #f8f9fa;
+}
+
+.counter-panel {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.counter-item {
+    text-align: center;
+    padding: 0 1.5rem;
+    position: relative;
+}
+
+.counter-item:not(:last-child):after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 25%;
+    height: 50%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(106, 17, 203, 0.5), transparent);
+}
+
+.counter-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #6a11cb;
+    margin-bottom: 0.3rem;
+}
+
+.counter-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Global compact UI styles */
+/* Applied to all pages for a more compact, efficient layout */
+
+/* Sidebar adjustment */
+.sidebar {
+    width: 250px; /* Slightly narrower */
+}
+
+.main-content {
+    margin-left: 250px;
+    padding: 1rem 1.25rem;
+}
+
+.sidebar-brand {
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.sidebar-brand h2 {
+    font-size: 1.35rem;
+}
+
+.sidebar-nav li a {
+    padding: 0.7rem 1.25rem;
+}
+
+/* More compact layout */
+.container-fluid {
+    padding: 0.5rem;
+}
+
+/* More compact cards */
+.card {
+    margin-bottom: 0.75rem;
+}
+
+.card-header {
+    padding: 0.5rem 0.75rem;
+}
+
+.card-header h5 {
+    font-size: 0.95rem;
+}
+
+.card-body {
+    padding: 0.75rem;
+}
+
+/* More compact stats cards */
+.stats-card {
+    padding: 0.75rem 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.stats-card i {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.stats-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.stats-card p {
+    font-size: 0.8rem;
+    margin-bottom: 0;
+}
+
+/* More compact tables */
+.table {
+    margin-bottom: 0;
+}
+
+.table th, .table td {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.8rem;
+}
+
+.badge {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+}
+
+.btn-sm {
+    padding: 0.15rem 0.4rem;
+    font-size: 0.75rem;
+}
+
+/* More compact forms */
+.form-control, .form-select {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.85rem;
+}
+
+.form-label {
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Navbar adjustments */
+.navbar {
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.navbar .page-title {
+    font-size: 1.1rem;
+}
+
+.user-profile .avatar {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+}
+
+/* More compact margins between rows */
+.row {
+    margin-bottom: 0.5rem;
+}
+
+/* DataTables adjustments */
+div.dataTables_wrapper div.dataTables_filter,
+div.dataTables_wrapper div.dataTables_length,
+div.dataTables_wrapper div.dataTables_info,
+div.dataTables_wrapper div.dataTables_paginate {
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+}
+
+div.dataTables_wrapper div.dataTables_filter input,
+div.dataTables_wrapper div.dataTables_length select {
+    height: calc(1.5em + 0.5rem + 2px);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+}
+
+.form-select-sm {
+    height: calc(1.5em + 0.5rem + 2px);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+}
+
+/* Chart and Graph Styles */
+.chart-container {
+    position: relative;
+    height: 250px;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.chart-container:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.chart-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.chart-legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+    padding: 0.25rem;
+    font-size: 0.75rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin: 0 0.5rem 0.25rem 0;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    margin-right: 0.25rem;
+}
+
+.chart-tooltip {
+    background: rgba(255,255,255,0.95);
+    border-radius: 4px;
+    padding: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-size: 0.8rem;
+    border-left: 3px solid #6a11cb;
+}
+
+/* Specific chart type styles */
+.bar-chart-container .bar {
+    transition: all 0.3s;
+}
+
+.bar-chart-container .bar:hover {
+    opacity: 0.8;
+}
+
+.pie-chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pie-chart-container .slice {
+    transition: transform 0.3s;
+}
+
+.pie-chart-container .slice:hover {
+    transform: scale(1.03);
+}
+
+.line-chart-container .line {
+    stroke-width: 3;
+    transition: stroke-width 0.3s;
+}
+
+.line-chart-container .line:hover {
+    stroke-width: 4;
+}
+
+.line-chart-container .point {
+    transition: all 0.3s;
+}
+
+.line-chart-container .point:hover {
+    r: 6;
+    stroke-width: 2;
+}
+
+/* Gradient fills for charts */
+.chart-gradient-purple {
+    background: linear-gradient(180deg, rgba(106,17,203,0.8) 0%, rgba(106,17,203,0.2) 100%);
+}
+
+.chart-gradient-blue {
+    background: linear-gradient(180deg, rgba(37,117,252,0.8) 0%, rgba(37,117,252,0.2) 100%);
+}
+
+.chart-gradient-orange {
+    background: linear-gradient(180deg, rgba(255,165,0,0.8) 0%, rgba(255,165,0,0.2) 100%);
+}
+
+/* Dashboard stat comparison charts */
+.mini-chart {
+    height: 40px;
+    width: 100px;
+    display: inline-block;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+/* KPI indicators */
+.kpi-indicator {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-left: 0.5rem;
+}
+
+.kpi-up {
+    background-color: rgba(40, 167, 69, 0.15);
+    color: #28a745;
+}
+
+.kpi-down {
+    background-color: rgba(220, 53, 69, 0.15);
+    color: #dc3545;
+}
+
+.kpi-neutral {
+    background-color: rgba(108, 117, 125, 0.15);
+    color: #6c757d;
+}
+
+/* Chart responsive adjustments */
+@media (max-width: 768px) {
+    .chart-container {
+        height: 200px;
+    }
+}
+
+/* Compact Charts and Graphs */
+.compact-chart-container {
+    height: 180px;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.compact-chart-title {
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+}
+
+.compact-chart-legend {
+    font-size: 0.65rem;
+    padding: 0.15rem;
+    margin-top: 0.25rem;
+}
+
+.compact-legend-item {
+    margin: 0 0.35rem 0.15rem 0;
+}
+
+.compact-legend-color {
+    width: 8px;
+    height: 8px;
+    margin-right: 0.15rem;
+}
+
+.compact-chart-tooltip {
+    padding: 0.35rem;
+    font-size: 0.7rem;
+}
+
+/* Inline charts for tables and cards */
+.inline-chart {
+    height: 30px;
+    width: 60px;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 0.25rem;
+}
+
+/* Grid of small charts */
+.chart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.5rem;
+}
+
+.micro-chart {
+    height: 120px;
+    padding: 0.4rem;
+}
+
+.micro-chart .chart-title {
+    font-size: 0.75rem;
+}
+
+/* Sparklines for tables */
+.sparkline {
+    height: 20px;
+    width: 80px;
+    display: inline-block;
+    margin: 0;
+    vertical-align: middle;
+}
+
+/* Compact dashboard metrics with mini charts */
+.metric-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.metric-label {
+    font-size: 0.75rem;
+    color: #6c757d;
+    width: 40%;
+}
+
+.metric-value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #495057;
+}
+
+.metric-chart {
+    width: 60px;
+    height: 25px;
+}
+
+/* Compact comparison charts */
+.comparison-chart {
+    height: 150px;
+    display: flex;
+    align-items: flex-end;
+}
+
+.comparison-item {
+    flex: 1;
+    text-align: center;
+    padding: 0 0.15rem;
+}
+
+.comparison-bar {
+    width: 100%;
+    background: linear-gradient(180deg, rgba(106,17,203,0.8) 0%, rgba(106,17,203,0.4) 100%);
+    border-radius: 3px 3px 0 0;
+    transition: height 0.3s;
+}
+
+.comparison-bar:hover {
+    background: rgba(106,17,203,0.9);
+}
+
+.comparison-label {
+    font-size: 0.65rem;
+    color: #6c757d;
+    margin-top: 0.15rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.comparison-value {
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+
