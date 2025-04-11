@@ -3,6 +3,7 @@ session_start();
 
 // Include environment configuration
 require_once 'config/env.php';
+require_once 'includes/utils.php';
 
 // Redirect to dashboard if already logged in
 if (isset($_SESSION['user_id'])) {
@@ -36,9 +37,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['role'] = 'user';
         }
         
+        // Log successful login
+        logUserActivity($username, 'Login', 'Successful login');
+        
         header("Location: dashboard.php");
         exit();
     } else {
+        // Log failed login attempt
+        logUserActivity($username, 'Login', 'Invalid credentials', 'failure');
+        
         $error_message = "Invalid username or password!";
     }
 }

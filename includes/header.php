@@ -7,11 +7,15 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Include database connection
+// Include database connection and utilities
 require_once 'config/database.php';
+require_once 'includes/utils.php';
 
 // Get current page name
 $current_page = basename($_SERVER['PHP_SELF']);
+
+// Log page access
+logUserActivity($_SESSION['username'], 'Page Access', $current_page);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -614,6 +618,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <i class="fas fa-chart-bar"></i> Analytics
                 </a>
             </li>
+            <?php if (isAdmin()): ?>
+            <li>
+                <a href="logs.php" class="<?php echo ($current_page == 'logs.php') ? 'active' : ''; ?>">
+                    <i class="fas fa-history"></i> User Logs
+                </a>
+            </li>
+            <?php endif; ?>
         </ul>
     </div>
     

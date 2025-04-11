@@ -86,8 +86,18 @@ function insert($conn, $table, $data) {
     $sql = "INSERT INTO $table ($columns) VALUES ($values)";
     
     if ($conn->query($sql) === TRUE) {
+        // Log the insert operation if utils.php is loaded
+        if (function_exists('logUserActivity') && isset($_SESSION['username'])) {
+            $details = "Added new record to $table (ID: {$conn->insert_id})";
+            logUserActivity($_SESSION['username'], 'Database Insert', $details);
+        }
         return $conn->insert_id;
     } else {
+        // Log the error if utils.php is loaded
+        if (function_exists('logUserActivity') && isset($_SESSION['username'])) {
+            $details = "Error inserting into $table: " . $conn->error;
+            logUserActivity($_SESSION['username'], 'Database Insert', $details, 'failure');
+        }
         die("Error: " . $sql . "<br>" . $conn->error);
     }
 }
@@ -102,8 +112,18 @@ function update($conn, $table, $data, $where) {
     $sql = "UPDATE $table SET " . implode(", ", $sets) . " WHERE $where";
     
     if ($conn->query($sql) === TRUE) {
+        // Log the update operation if utils.php is loaded
+        if (function_exists('logUserActivity') && isset($_SESSION['username'])) {
+            $details = "Updated record in $table where $where";
+            logUserActivity($_SESSION['username'], 'Database Update', $details);
+        }
         return true;
     } else {
+        // Log the error if utils.php is loaded
+        if (function_exists('logUserActivity') && isset($_SESSION['username'])) {
+            $details = "Error updating $table: " . $conn->error;
+            logUserActivity($_SESSION['username'], 'Database Update', $details, 'failure');
+        }
         die("Error: " . $sql . "<br>" . $conn->error);
     }
 }
@@ -113,8 +133,18 @@ function delete($conn, $table, $where) {
     $sql = "DELETE FROM $table WHERE $where";
     
     if ($conn->query($sql) === TRUE) {
+        // Log the delete operation if utils.php is loaded
+        if (function_exists('logUserActivity') && isset($_SESSION['username'])) {
+            $details = "Deleted record from $table where $where";
+            logUserActivity($_SESSION['username'], 'Database Delete', $details);
+        }
         return true;
     } else {
+        // Log the error if utils.php is loaded
+        if (function_exists('logUserActivity') && isset($_SESSION['username'])) {
+            $details = "Error deleting from $table: " . $conn->error;
+            logUserActivity($_SESSION['username'], 'Database Delete', $details, 'failure');
+        }
         die("Error: " . $sql . "<br>" . $conn->error);
     }
 }
