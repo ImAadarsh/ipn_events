@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+// Include environment configuration
+require_once 'config/env.php';
+
 // Redirect to dashboard if already logged in
 if (isset($_SESSION['user_id'])) {
     header("Location: dashboard.php");
@@ -12,11 +15,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
     
-    // Hardcoded users as specified
+    // Use credentials from .env file
     $users = [
-        'aadarshkavita' => '1@Aadarsh',
-        'gaurava.ipn' => '1@gaurava.ipn',
-        'pooja.ipn' => '1@pooja.singh'
+        'imkaadarsh' => USER_IMKAADARSH,
+        'gaurava.ipn' => USER_GAURAVA,
+        'pooja.ipn' => USER_POOJA,
+        'vijeta.ipn' => USER_VIJETA,
+        'shvetambri.ipn' => USER_SHVETAMBRI,
+        'aarti.endeavour' => USER_AARTI
     ];
     
     if (array_key_exists($username, $users) && $users[$username] === $password) {

@@ -43,7 +43,18 @@ function defineDBConstants() {
     define('QUEST_DB_NAME', getenv('QUEST_DB_NAME'));
 }
 
+// Define constants for user credentials
+function defineUserCredentials() {
+    define('USER_IMKAADARSH', getenv('USER_IMKAADARSH'));
+    define('USER_GAURAVA', getenv('USER_GAURAVA'));
+    define('USER_POOJA', getenv('USER_POOJA'));
+    define('USER_VIJETA', getenv('USER_VIJETA'));
+    define('USER_SHVETAMBRI', getenv('USER_SHVETAMBRI'));
+    define('USER_AARTI', getenv('USER_AARTI'));
+}
+
 // Load variables from .env file
 $envPath = dirname(__DIR__) . '/.env';
 loadEnvironmentVariables($envPath);
 defineDBConstants(); 
+defineUserCredentials(); 
