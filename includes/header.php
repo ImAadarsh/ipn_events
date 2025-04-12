@@ -878,7 +878,7 @@ logUserActivity($_SESSION['username'], 'Page Access', $current_page);
             </li>
             <li>
                 <a href="leaderssummit.php" class="<?php echo ($current_page == 'leaderssummit.php') ? 'active' : ''; ?>">
-                    <i class="fas fa-globe-asia"></i> Leaders Summit
+                    <i class="fas fa-globe-asia"></i> Leaders Summit Nepal
                 </a>
             </li>
             <li>

@@ -276,7 +276,7 @@ $questConn->close();
             <div class="stats-card text-center">
                 <i class="fas fa-globe-asia"></i>
                 <h3><?php echo $leaderssummit_count; ?></h3>
-                <p>Leaders Summit</p>
+                <p>Leaders Summit Nepal</p>
             </div>
         </div>
         <div class="col-md-3 col-xl-3">
@@ -397,7 +397,7 @@ $questConn->close();
                                 $events = [
                                     'IPN Conclaves' => $conclave_count,
                                     'Yuva Summit' => $yuva_count,
-                                    'Leaders Summit' => $leaderssummit_count,
+                                    'Leaders Summit Nepal' => $leaderssummit_count,
                                     'Impactful Schools' => $misb_count,
                                     'IPN Leadership' => $ils_count,
                                     'Quest 2025' => $quest_count

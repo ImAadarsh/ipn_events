@@ -30,3 +30,5 @@
 [2025-04-12 08:55:59] gaurava.ipn | 127.0.0.1 | Page Access | ils.php | success
 [2025-04-12 08:56:13] gaurava.ipn | 127.0.0.1 | Page Access | ils.php | success
 [2025-04-12 08:56:38] gaurava.ipn | 127.0.0.1 | Page Access | ils.php | success
+[2025-04-12 09:35:22] gaurava.ipn | 127.0.0.1 | Page Access | dashboard.php | success
+[2025-04-12 09:35:26] gaurava.ipn | 127.0.0.1 | Page Access | logs.php | success

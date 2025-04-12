@@ -220,7 +220,7 @@ $month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
             <div class="stats-card text-center">
                 <i class="fas fa-globe-asia"></i>
                 <h3><?php echo $leaderssummit_count; ?></h3>
-                <p>Leaders Summit</p>
+                <p>Leaders Summit Nepal</p>
             </div>
         </div>
         <div class="col-md-4 col-xl-3">
@@ -520,7 +520,7 @@ $month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
                         </div>
                     </div>
                     
-                    <!-- Leaders Summit Table -->
+                    <!-- Leaders Summit Nepal Table -->
                     <div id="leaderssummit-table" class="registration-table" style="display: none;">
                         <div class="table-responsive">
                             <table class="table table-hover" id="leaderssummit-events-table">
