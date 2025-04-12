@@ -18,18 +18,77 @@
     <!-- Custom JS -->
     <script>
         // Sidebar toggle
-        document.getElementById('sidebar-toggle')?.addEventListener('click', function() {
+        document.getElementById('sidebar-toggle')?.addEventListener('click', function(e) {
+            e.preventDefault();
             document.querySelector('.sidebar').classList.toggle('active');
-            document.querySelector('.main-content').classList.toggle('active');
+            document.querySelector('.overlay').classList.toggle('active');
+            
+            // Add body class to prevent scrolling when sidebar is open
+            document.body.classList.toggle('sidebar-open');
+        });
+
+        // Close sidebar when overlay is clicked
+        document.getElementById('sidebar-overlay')?.addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.remove('active');
+            document.querySelector('.overlay').classList.remove('active');
+            document.body.classList.remove('sidebar-open');
         });
         
-        // DataTables initialization
+        // Close sidebar with close button
+        document.getElementById('sidebar-close')?.addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.remove('active');
+            document.querySelector('.overlay').classList.remove('active');
+            document.body.classList.remove('sidebar-open');
+        });
+
+        // Close sidebar when navigation link is clicked on mobile
+        if (window.innerWidth < 992) {
+            document.querySelectorAll('.sidebar-nav li a').forEach(link => {
+                link.addEventListener('click', function() {
+                    document.querySelector('.sidebar').classList.remove('active');
+                    document.querySelector('.overlay').classList.remove('active');
+                    document.body.classList.remove('sidebar-open');
+                });
+            });
+        }
+        
+        // Initialize DataTables for visible tables only
         $(document).ready(function() {
+            // Handle navbar hide/show on scroll for mobile devices
+            if (window.innerWidth < 992) {
+                let lastScrollTop = 0;
+                const navbar = document.querySelector('.navbar');
+                const scrollThreshold = 10;
+                
+                window.addEventListener('scroll', function() {
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    
+                    // Don't hide navbar when sidebar is open
+                    if (document.body.classList.contains('sidebar-open')) {
+                        return;
+                    }
+                    
+                    // Determine scroll direction
+                    if (Math.abs(scrollTop - lastScrollTop) > scrollThreshold) {
+                        if (scrollTop > lastScrollTop && scrollTop > 60) {
+                            // Scrolling down & past navbar height
+                            navbar.classList.add('nav-up');
+                            navbar.classList.remove('nav-down');
+                        } else {
+                            // Scrolling up
+                            navbar.classList.add('nav-down');
+                            navbar.classList.remove('nav-up');
+                        }
+                        lastScrollTop = scrollTop;
+                    }
+                });
+            }
+            
             if ($('.datatable').length) {
                 $('.datatable').DataTable({
                     responsive: true,
                     lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-                    dom: '<"d-flex justify-content-between align-items-center mb-3"lf>rt<"d-flex justify-content-between align-items-center"ip>',
+                    dom: '<"d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3"lf>rt<"d-flex flex-column flex-md-row justify-content-between align-items-md-center"ip>',
                     language: {
                         search: "_INPUT_",
                         searchPlaceholder: "Search..."
@@ -41,7 +100,7 @@
                 $('.datatable-export').DataTable({
                     responsive: true,
                     lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-                    dom: '<"d-flex justify-content-between align-items-center mb-3"lBf>rt<"d-flex justify-content-between align-items-center"ip>',
+                    dom: '<"d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3"lBf>rt<"d-flex flex-column flex-md-row justify-content-between align-items-md-center"ip>',
                     buttons: [
                         {
                             extend: 'excel',
@@ -73,6 +132,19 @@
                         searchPlaceholder: "Search..."
                     }
                 });
+            }
+            
+            // Wrap all tables with responsive containers if not already wrapped
+            $('.table:not(.dataTable)').each(function() {
+                if (!$(this).parent().hasClass('table-responsive')) {
+                    $(this).wrap('<div class="table-responsive"></div>');
+                }
+            });
+            
+            // Ensure form inputs and buttons are big enough for touch on mobile
+            if (window.innerWidth < 768) {
+                $('input, select, textarea, .btn').addClass('form-control-lg');
+                $('.btn-sm').removeClass('form-control-lg');
             }
         });
     </script>

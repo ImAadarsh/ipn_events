@@ -12,3 +12,13 @@
 [2025-04-11 21:16:54] gaurava.ipn | 127.0.0.1 | Page Access | quest.php | success
 [2025-04-11 21:16:55] gaurava.ipn | 127.0.0.1 | Page Access | analytics.php | success
 [2025-04-11 21:16:56] gaurava.ipn | 127.0.0.1 | Logout | User logged out | success
+[2025-04-11 21:43:58] gaurava.ipn | 127.0.0.1 | Login | Successful login | success
+[2025-04-11 21:43:58] gaurava.ipn | 127.0.0.1 | Page Access | dashboard.php | success
+[2025-04-11 21:46:43] gaurava.ipn | 127.0.0.1 | Page Access | dashboard.php | success
+[2025-04-11 21:46:45] gaurava.ipn | 127.0.0.1 | Page Access | dashboard.php | success
+[2025-04-11 21:46:55] gaurava.ipn | 127.0.0.1 | Page Access | dashboard.php | success
+[2025-04-11 21:47:17] gaurava.ipn | 127.0.0.1 | Page Access | dashboard.php | success
+[2025-04-11 21:47:27] gaurava.ipn | 127.0.0.1 | Page Access | dashboard.php | success
+[2025-04-11 21:47:34] gaurava.ipn | 127.0.0.1 | Page Access | analytics.php | success
+[2025-04-11 21:47:48] gaurava.ipn | 127.0.0.1 | Page Access | quest.php | success
+[2025-04-11 21:47:56] gaurava.ipn | 127.0.0.1 | Logout | User logged out | success

@@ -257,11 +257,66 @@ $month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
     <div class="row mb-4">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                     <h5 class="mb-0">Registration Trends - <?php echo $current_year; ?></h5>
+                    <div class="d-block d-md-none mt-2">
+                        <button class="btn btn-sm btn-outline-primary toggle-chart-view">
+                            <i class="fas fa-chart-line"></i> <span>Show/Hide Chart</span>
+                        </button>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <canvas id="registrationTrendsChart" height="80"></canvas>
+                <!-- Compact mobile view - shows only summary data -->
+                <div class="card-body d-md-none mb-1">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="small text-muted mb-1">Most active month:</div>
+                            <div class="h6 mb-3">
+                                <?php
+                                $max_month_value = 0;
+                                $max_month_index = 0;
+                                $total_registrations = 0;
+                                
+                                // Find max month across all event types
+                                for ($i = 0; $i < 12; $i++) {
+                                    $month_total = $conclave_trends[$i] + $yuva_trends[$i] + $leaderssummit_trends[$i] + 
+                                                  $misb_trends[$i] + $ils_trends[$i] + $quest_trends[$i];
+                                    $total_registrations += $month_total;
+                                    
+                                    if ($month_total > $max_month_value) {
+                                        $max_month_value = $month_total;
+                                        $max_month_index = $i;
+                                    }
+                                }
+                                
+                                echo $month_names[$max_month_index] . ' (' . $max_month_value . ')';
+                                ?>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="small text-muted mb-1">Top event:</div>
+                            <div class="h6 mb-3">
+                                <?php
+                                $event_totals = [
+                                    'IPN Conclaves' => array_sum($conclave_trends),
+                                    'Yuva Summit' => array_sum($yuva_trends),
+                                    'Nepal Summit' => array_sum($leaderssummit_trends),
+                                    'Impactful Schools' => array_sum($misb_trends),
+                                    'IPN Leadership' => array_sum($ils_trends),
+                                    'Quest 2025' => array_sum($quest_trends)
+                                ];
+                                arsort($event_totals);
+                                $top_event = key($event_totals);
+                                $top_count = current($event_totals);
+                                
+                                echo $top_event . ' (' . $top_count . ')';
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Full chart view (hidden on mobile by default) -->
+                <div class="card-body chart-container d-md-block">
+                    <canvas id="registrationTrendsChart" height="250"></canvas>
                 </div>
             </div>
         </div>
@@ -671,15 +726,38 @@ document.addEventListener('DOMContentLoaded', function() {
         data: data,
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'top',
+                    position: window.innerWidth < 768 ? 'bottom' : 'top',
+                    align: 'start',
                     labels: {
                         boxWidth: 12,
                         font: {
-                            size: 10
+                            size: window.innerWidth < 768 ? 8 : 10
+                        },
+                        padding: window.innerWidth < 768 ? 5 : 10
+                    },
+                    maxHeight: window.innerWidth < 768 ? 80 : 50,
+                    onClick: function(e, legendItem, legend) {
+                        const index = legendItem.datasetIndex;
+                        const ci = legend.chart;
+                        const meta = ci.getDatasetMeta(index);
+                        
+                        // Toggle visibility
+                        meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
+                        
+                        // If on mobile and more than half are hidden, show a message
+                        if (window.innerWidth < 768) {
+                            let hiddenCount = 0;
+                            for (let i = 0; i < ci.data.datasets.length; i++) {
+                                if (ci.getDatasetMeta(i).hidden) {
+                                    hiddenCount++;
+                                }
+                            }
                         }
+                        
+                        ci.update();
                     }
                 },
                 tooltip: {
@@ -690,6 +768,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     titleFont: {
                         size: 11
+                    },
+                    callbacks: {
+                        // Limit items shown on mobile
+                        label: function(context) {
+                            if (window.innerWidth < 768 && context.datasetIndex > 2 && !context.dataset.hidden) {
+                                return null;
+                            }
+                            return context.dataset.label + ': ' + context.parsed.y;
+                        }
                     }
                 }
             },
@@ -697,7 +784,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 x: {
                     display: true,
                     title: {
-                        display: true,
+                        display: window.innerWidth >= 768,
                         text: 'Month',
                         font: {
                             size: 10
@@ -706,13 +793,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     ticks: {
                         font: {
                             size: 9
-                        }
+                        },
+                        maxRotation: window.innerWidth < 768 ? 45 : 0,
+                        minRotation: window.innerWidth < 768 ? 45 : 0
                     }
                 },
                 y: {
                     display: true,
                     title: {
-                        display: true,
+                        display: window.innerWidth >= 768,
                         text: 'Registrations',
                         font: {
                             size: 10
@@ -730,6 +819,24 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     new Chart(ctx, config);
+    
+    // Toggle chart visibility on mobile
+    document.querySelector('.toggle-chart-view')?.addEventListener('click', function() {
+        const chartContainer = document.querySelector('.chart-container');
+        const buttonText = this.querySelector('span');
+        
+        if (chartContainer.classList.contains('d-md-block')) {
+            // Show the chart
+            chartContainer.classList.remove('d-md-block');
+            chartContainer.classList.add('d-block', 'with-legend');
+            buttonText.textContent = 'Hide Chart';
+        } else {
+            // Hide the chart
+            chartContainer.classList.remove('d-block', 'with-legend');
+            chartContainer.classList.add('d-md-block');
+            buttonText.textContent = 'Show Chart';
+        }
+    });
     
     // Initialize DataTables for visible tables only
     const allEventsTable = $('#all-events-table').DataTable({

@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['username'] = $username;
         
         // Set user role (can be expanded later if needed)
-        if ($username === 'gaurava.ipn') {
+        if ($username === 'gaurava.ipn' || $username === 'imkaadarsh') {
             $_SESSION['role'] = 'admin';
         } else {
             $_SESSION['role'] = 'user';
