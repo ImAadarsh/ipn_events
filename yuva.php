@@ -1,7 +1,16 @@
 <?php
 // Include header
 include 'includes/header.php';
-
+// Check if user has permission to view yuva data
+if (!canViewEvent('yuva')) {
+    echo '<div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            You do not have permission to view Yuva data. 
+            Please contact an administrator if you need access.
+          </div>';
+    include 'includes/footer.php';
+    exit();
+}
 // Check if viewing a specific registration
 if (isset($_GET['id'])) {
     $id = (int)$_GET['id'];

@@ -2,6 +2,17 @@
 // Include header
 include 'includes/header.php';
 
+// Check if user has permission to view MISB data
+if (!canViewEvent('misb')) {
+    echo '<div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            You do not have permission to view MISB data. 
+            Please contact an administrator if you need access.
+          </div>';
+    include 'includes/footer.php';
+    exit();
+}
+
 // Check if viewing a specific registration
 if (isset($_GET['id'])) {
     $id = (int)$_GET['id'];
@@ -268,12 +279,26 @@ foreach ($monthly_trend as $row) {
     
     <!-- Data Table -->
     <div class="card">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Impactful School Brands Registrations</h5>
+            
+            <?php if (canExportEvent('misb')): ?>
+            <div class="btn-group">
+                <button class="btn btn-sm btn-success" id="exportCSV">
+                    <i class="fas fa-file-csv me-1"></i> Export CSV
+                </button>
+                <button class="btn btn-sm btn-danger" id="exportPDF">
+                    <i class="fas fa-file-pdf me-1"></i> Export PDF
+                </button>
+                <button class="btn btn-sm btn-primary" id="exportExcel">
+                    <i class="fas fa-file-excel me-1"></i> Export Excel
+                </button>
+            </div>
+            <?php endif; ?>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover datatable-export">
+                <table class="table table-hover" id="misbTable">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -406,6 +431,68 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+    
+    // Initialize DataTable
+    var table = $('#misbTable').DataTable({
+        dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+             "<'row'<'col-sm-12'tr>>" +
+             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        order: [[7, 'desc']], // Sort by date
+        responsive: true,
+        buttons: [
+            {
+                extend: 'csvHtml5',
+                text: 'Export CSV',
+                filename: 'misb_export_<?php echo date("Y-m-d"); ?>',
+                className: 'd-none',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7]
+                }
+            },
+            {
+                extend: 'pdfHtml5',
+                text: 'Export PDF',
+                filename: 'misb_export_<?php echo date("Y-m-d"); ?>',
+                className: 'd-none',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7]
+                },
+                customize: function(doc) {
+                    doc.content.splice(0, 1, {
+                        text: 'IPN Foundation - MISB Registrations',
+                        fontSize: 16,
+                        alignment: 'center',
+                        margin: [0, 0, 0, 12]
+                    });
+                }
+            },
+            {
+                extend: 'excelHtml5',
+                text: 'Export Excel',
+                filename: 'misb_export_<?php echo date("Y-m-d"); ?>',
+                className: 'd-none',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7]
+                }
+            }
+        ]
+    });
+    
+    <?php if (canExportEvent('misb')): ?>
+    // Bind export buttons
+    document.getElementById('exportCSV').addEventListener('click', function() {
+        table.button('.buttons-csv').trigger();
+    });
+    
+    document.getElementById('exportPDF').addEventListener('click', function() {
+        table.button('.buttons-pdf').trigger();
+    });
+    
+    document.getElementById('exportExcel').addEventListener('click', function() {
+        table.button('.buttons-excel').trigger();
+    });
+    <?php endif; ?>
 });
 </script>
 <?php endif; ?>

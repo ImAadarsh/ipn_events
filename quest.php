@@ -2,6 +2,16 @@
 // Include header
 include 'includes/header.php';
 
+// Check if user has permission to view quest data
+if (!canViewEvent('quest')) {
+    echo '<div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            You do not have permission to view Quest data. 
+            Please contact an administrator if you need access.
+          </div>';
+    include 'includes/footer.php';
+    exit();
+}
 // Get Quest DB connection using the function from database.php
 $questConn = connectQuestDB();
 

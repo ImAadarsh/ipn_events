@@ -2,6 +2,17 @@
 // Include header
 include 'includes/header.php';
 
+// Check if user has permission to view ils data
+if (!canViewEvent('ils')) {
+    echo '<div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            You do not have permission to view Ils data. 
+            Please contact an administrator if you need access.
+          </div>';
+    include 'includes/footer.php';
+    exit();
+}
+
 // Check if viewing a specific registration
 if (isset($_GET['id'])) {
     $id = (int)$_GET['id'];
@@ -13,6 +24,8 @@ if (isset($_GET['id'])) {
         exit();
     }
 }
+
+
 
 // Get all registrations with optional filters
 $where_clause = "1=1"; // Default condition that's always true

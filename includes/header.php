@@ -298,16 +298,24 @@ logUserActivity($_SESSION['username'], 'Page Access', $current_page);
             border-bottom: 1px solid var(--gray-200);
             font-weight: 600;
             color: var(--gray-800);
-            padding: 1.25rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding: 1.0rem 1.05rem;
         }
         
         .card-header h5 {
             margin: 0;
             font-size: 1.125rem;
-            color: white
+            color: white;
+        }
+        
+        /* Card header with flex layout */
+        .card-header.d-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .card-header.d-flex h5 {
+            margin-bottom: 0;
         }
         
         .card-body {
@@ -866,45 +874,76 @@ logUserActivity($_SESSION['username'], 'Page Access', $current_page);
                     <i class="fas fa-tachometer-alt"></i> Dashboard
                 </a>
             </li>
+            
+            <?php if (canViewEvent('conclaves')): ?>
             <li>
                 <a href="conclaves.php" class="<?php echo ($current_page == 'conclaves.php') ? 'active' : ''; ?>">
-                    <i class="fas fa-users"></i> IPN Conclaves
+                    <i class="fas fa-handshake"></i> IPN Conclaves
                 </a>
             </li>
+            <?php endif; ?>
+            
+            <?php if (canViewEvent('yuva')): ?>
             <li>
                 <a href="yuva.php" class="<?php echo ($current_page == 'yuva.php') ? 'active' : ''; ?>">
-                    <i class="fas fa-graduation-cap"></i> Yuva Summit
+                    <i class="fas fa-users"></i> IPN YUVA
                 </a>
             </li>
+            <?php endif; ?>
+            
+            <?php if (canViewEvent('leaderssummit')): ?>
             <li>
                 <a href="leaderssummit.php" class="<?php echo ($current_page == 'leaderssummit.php') ? 'active' : ''; ?>">
-                    <i class="fas fa-globe-asia"></i> Leaders Summit Nepal
+                    <i class="fas fa-chart-line"></i> Leaders Summit
                 </a>
             </li>
+            <?php endif; ?>
+            
+            <?php if (canViewEvent('misb')): ?>
             <li>
                 <a href="misb.php" class="<?php echo ($current_page == 'misb.php') ? 'active' : ''; ?>">
-                    <i class="fas fa-award"></i> Impactful Schools
+                    <i class="fas fa-graduation-cap"></i> MISB
                 </a>
             </li>
+            <?php endif; ?>
+            
+            <?php if (canViewEvent('ils')): ?>
             <li>
                 <a href="ils.php" class="<?php echo ($current_page == 'ils.php') ? 'active' : ''; ?>">
-                    <i class="fas fa-landmark"></i> IPN Leadership
+                    <i class="fas fa-school"></i> ILS
                 </a>
             </li>
+            <?php endif; ?>
+            
+            <?php if (canViewEvent('quest')): ?>
             <li>
                 <a href="quest.php" class="<?php echo ($current_page == 'quest.php') ? 'active' : ''; ?>">
-                    <i class="fas fa-trophy"></i> Quest 2025
+                    <i class="fas fa-question-circle"></i> QUEST
                 </a>
             </li>
+            <?php endif; ?>
+            
             <li>
                 <a href="analytics.php" class="<?php echo ($current_page == 'analytics.php') ? 'active' : ''; ?>">
-                    <i class="fas fa-chart-bar"></i> Analytics
+                    <i class="fas fa-chart-pie"></i> Analytics
                 </a>
             </li>
+            
             <?php if (isAdmin()): ?>
+            <li class="sidebar-header">Administration</li>
+            <li>
+                <a href="user_permissions.php" class="<?php echo ($current_page == 'user_permissions.php') ? 'active' : ''; ?>">
+                    <i class="fas fa-user-shield"></i> User Permissions
+                </a>
+            </li>
             <li>
                 <a href="logs.php" class="<?php echo ($current_page == 'logs.php') ? 'active' : ''; ?>">
                     <i class="fas fa-history"></i> User Logs
+                </a>
+            </li>
+            <li>
+                <a href="setup_permissions.php" class="<?php echo ($current_page == 'setup_permissions.php') ? 'active' : ''; ?>">
+                    <i class="fas fa-cogs"></i> Setup Permissions
                 </a>
             </li>
             <?php endif; ?>

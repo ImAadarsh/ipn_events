@@ -99,4 +99,105 @@ function getCurrentPage() {
  */
 function isAdmin() {
     return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+}
+
+/**
+ * Check if user has permission to view a specific event type
+ * 
+ * @param string $event_type The event type to check (conclaves, yuva, etc.)
+ * @return bool True if user has view permission
+ */
+function canViewEvent($event_type) {
+    global $conn;
+    
+    // Admins always have access
+    if (isAdmin()) {
+        return true;
+    }
+    
+
+    
+    // Guest users have no access
+    if (!isset($_SESSION['username'])) {
+        return false;
+    }
+    
+    $username = clean($conn, $_SESSION['username']);
+    $event_type = clean($conn, $event_type);
+    
+    $sql = "SELECT can_view FROM user_permissions WHERE user_id = '$username' AND event_type = '$event_type'";
+    $result = $conn->query($sql);
+    
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        return (bool)$row['can_view'];
+    }
+    
+    return false;
+}
+
+/**
+ * Check if user has permission to export data for a specific event type
+ * 
+ * @param string $event_type The event type to check (conclaves, yuva, etc.)
+ * @return bool True if user has export permission
+ */
+function canExportEvent($event_type) {
+    global $conn;
+    
+    // Admins always have export access
+    if (isAdmin()) {
+        return true;
+    }
+    
+    // Guest users have no access
+    if (!isset($_SESSION['username'])) {
+        return false;
+    }
+    
+    $username = clean($conn, $_SESSION['username']);
+    $event_type = clean($conn, $event_type);
+    
+    $sql = "SELECT can_export FROM user_permissions WHERE user_id = '$username' AND event_type = '$event_type'";
+    $result = $conn->query($sql);
+    
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        return (bool)$row['can_export'];
+    }
+    
+    return false;
+}
+
+/**
+ * Get all event types that a user has permission to view
+ * 
+ * @return array List of event types the user can view
+ */
+function getUserViewableEvents() {
+    global $conn;
+    
+    // Admins can view all events
+    if (isAdmin()) {
+        return ['conclaves', 'yuva', 'leaderssummit', 'misb', 'ils', 'quest'];
+    }
+    
+    // Guest users have no access
+    if (!isset($_SESSION['username'])) {
+        return [];
+    }
+    
+    $username = clean($conn, $_SESSION['username']);
+    
+    $sql = "SELECT event_type FROM user_permissions WHERE user_id = '$username' AND can_view = 1";
+    $result = $conn->query($sql);
+    
+    $event_types = [];
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $event_types[] = $row['event_type'];
+        }
+    }
+    
+    return $event_types;
 } 

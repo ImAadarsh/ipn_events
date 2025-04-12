@@ -2,44 +2,78 @@
 // Include header
 include 'includes/header.php';
 
+// Get available event types for this user
+$viewable_events = getUserViewableEvents();
+
 // Get total counts by event type
-$result = $conn->query("SELECT COUNT(*) as count FROM conclaves");
-$conclave_count = $result->fetch_assoc()['count'];
+$conclave_count = 0;
+$yuva_count = 0;
+$leaderssummit_count = 0;
+$misb_count = 0;
+$ils_count = 0;
+$quest_count = 0;
 
-$result = $conn->query("SELECT COUNT(*) as count FROM yuva");
-$yuva_count = $result->fetch_assoc()['count'];
+// Only get counts for events the user can view
+if (in_array('conclaves', $viewable_events)) {
+    $result = $conn->query("SELECT COUNT(*) as count FROM conclaves");
+    $conclave_count = $result->fetch_assoc()['count'];
+}
 
-$result = $conn->query("SELECT COUNT(*) as count FROM leaderssummit");
-$leaderssummit_count = $result->fetch_assoc()['count'];
+if (in_array('yuva', $viewable_events)) {
+    $result = $conn->query("SELECT COUNT(*) as count FROM yuva");
+    $yuva_count = $result->fetch_assoc()['count'];
+}
 
-$result = $conn->query("SELECT COUNT(*) as count FROM misb");
-$misb_count = $result->fetch_assoc()['count'];
+if (in_array('leaderssummit', $viewable_events)) {
+    $result = $conn->query("SELECT COUNT(*) as count FROM leaderssummit");
+    $leaderssummit_count = $result->fetch_assoc()['count'];
+}
 
-$result = $conn->query("SELECT COUNT(*) as count FROM ils");
-$ils_count = $result->fetch_assoc()['count'];
+if (in_array('misb', $viewable_events)) {
+    $result = $conn->query("SELECT COUNT(*) as count FROM misb");
+    $misb_count = $result->fetch_assoc()['count'];
+}
+
+if (in_array('ils', $viewable_events)) {
+    $result = $conn->query("SELECT COUNT(*) as count FROM ils");
+    $ils_count = $result->fetch_assoc()['count'];
+}
 
 // Get Quest count using the centralized connection function
-$questConn = connectQuestDB();
-$quest_count = 0;
-$quest_result = $questConn->query("SELECT COUNT(*) as count FROM schools");
-if ($quest_result) {
-    $quest_count = $quest_result->fetch_assoc()['count'];
+if (in_array('quest', $viewable_events)) {
+    $questConn = connectQuestDB();
+    $quest_result = $questConn->query("SELECT COUNT(*) as count FROM schools");
+    if ($quest_result) {
+        $quest_count = $quest_result->fetch_assoc()['count'];
+    }
+    $questConn->close();
 }
-$questConn->close();
 
 $total_count = $conclave_count + $yuva_count + $leaderssummit_count + $misb_count + $ils_count + $quest_count;
 
-// Get recent registrations (latest 5 from each table)
-$conclaves = fetch_all($conn, "SELECT * FROM conclaves ORDER BY created_at DESC LIMIT 5");
-$yuvas = fetch_all($conn, "SELECT * FROM yuva ORDER BY created_at DESC LIMIT 5");
-$leaderssummits = fetch_all($conn, "SELECT * FROM leaderssummit ORDER BY created_at DESC LIMIT 5");
-$misbs = fetch_all($conn, "SELECT * FROM misb ORDER BY created_at DESC LIMIT 5");
-$ills = fetch_all($conn, "SELECT * FROM ils ORDER BY created_at DESC LIMIT 5");
+// Get recent registrations (latest 5 from each table) - only for events the user can view
+$conclaves = in_array('conclaves', $viewable_events) ? 
+    fetch_all($conn, "SELECT * FROM conclaves ORDER BY created_at DESC LIMIT 5") : [];
+    
+$yuvas = in_array('yuva', $viewable_events) ? 
+    fetch_all($conn, "SELECT * FROM yuva ORDER BY created_at DESC LIMIT 5") : [];
+    
+$leaderssummits = in_array('leaderssummit', $viewable_events) ? 
+    fetch_all($conn, "SELECT * FROM leaderssummit ORDER BY created_at DESC LIMIT 5") : [];
+    
+$misbs = in_array('misb', $viewable_events) ? 
+    fetch_all($conn, "SELECT * FROM misb ORDER BY created_at DESC LIMIT 5") : [];
+    
+$ills = in_array('ils', $viewable_events) ? 
+    fetch_all($conn, "SELECT * FROM ils ORDER BY created_at DESC LIMIT 5") : [];
 
 // Get recent Quest registrations
-$questConn = connectQuestDB();
-$quests = fetch_all($questConn, "SELECT * FROM schools ORDER BY created_at DESC LIMIT 5");
-$questConn->close();
+$quests = [];
+if (in_array('quest', $viewable_events)) {
+    $questConn = connectQuestDB();
+    $quests = fetch_all($questConn, "SELECT * FROM schools ORDER BY created_at DESC LIMIT 5");
+    $questConn->close();
+}
 
 // Get registration trends (count by month for the current year)
 $current_year = date('Y');
@@ -51,55 +85,67 @@ $misb_trends = array_fill(0, 12, 0);
 $ils_trends = array_fill(0, 12, 0);
 $quest_trends = array_fill(0, 12, 0);
 
-// Populate conclave trends
-$conclave_monthly = fetch_all($conn, "SELECT MONTH(created_at) as month, COUNT(*) as count FROM conclaves 
+// Populate conclave trends - only if user has access
+if (in_array('conclaves', $viewable_events)) {
+    $conclave_monthly = fetch_all($conn, "SELECT MONTH(created_at) as month, COUNT(*) as count FROM conclaves 
                                   WHERE YEAR(created_at) = '$current_year' 
                                   GROUP BY MONTH(created_at)");
-foreach ($conclave_monthly as $row) {
-    $conclave_trends[$row['month'] - 1] = (int)$row['count'];
+    foreach ($conclave_monthly as $row) {
+        $conclave_trends[$row['month'] - 1] = (int)$row['count'];
+    }
 }
 
-// Populate yuva trends
-$yuva_monthly = fetch_all($conn, "SELECT MONTH(created_at) as month, COUNT(*) as count FROM yuva 
+// Populate yuva trends - only if user has access
+if (in_array('yuva', $viewable_events)) {
+    $yuva_monthly = fetch_all($conn, "SELECT MONTH(created_at) as month, COUNT(*) as count FROM yuva 
                              WHERE YEAR(created_at) = '$current_year' 
                              GROUP BY MONTH(created_at)");
-foreach ($yuva_monthly as $row) {
-    $yuva_trends[$row['month'] - 1] = (int)$row['count'];
+    foreach ($yuva_monthly as $row) {
+        $yuva_trends[$row['month'] - 1] = (int)$row['count'];
+    }
 }
 
-// Populate leaderssummit trends
-$leaderssummit_monthly = fetch_all($conn, "SELECT MONTH(created_at) as month, COUNT(*) as count FROM leaderssummit 
+// Populate leaderssummit trends - only if user has access
+if (in_array('leaderssummit', $viewable_events)) {
+    $leaderssummit_monthly = fetch_all($conn, "SELECT MONTH(created_at) as month, COUNT(*) as count FROM leaderssummit 
                                       WHERE YEAR(created_at) = '$current_year' 
                                       GROUP BY MONTH(created_at)");
-foreach ($leaderssummit_monthly as $row) {
-    $leaderssummit_trends[$row['month'] - 1] = (int)$row['count'];
+    foreach ($leaderssummit_monthly as $row) {
+        $leaderssummit_trends[$row['month'] - 1] = (int)$row['count'];
+    }
 }
 
-// Populate misb trends
-$misb_monthly = fetch_all($conn, "SELECT MONTH(created_at) as month, COUNT(*) as count FROM misb 
+// Populate misb trends - only if user has access
+if (in_array('misb', $viewable_events)) {
+    $misb_monthly = fetch_all($conn, "SELECT MONTH(created_at) as month, COUNT(*) as count FROM misb 
                              WHERE YEAR(created_at) = '$current_year' 
                              GROUP BY MONTH(created_at)");
-foreach ($misb_monthly as $row) {
-    $misb_trends[$row['month'] - 1] = (int)$row['count'];
+    foreach ($misb_monthly as $row) {
+        $misb_trends[$row['month'] - 1] = (int)$row['count'];
+    }
 }
 
-// Populate ils trends
-$ils_monthly = fetch_all($conn, "SELECT MONTH(created_at) as month, COUNT(*) as count FROM ils 
+// Populate ils trends - only if user has access
+if (in_array('ils', $viewable_events)) {
+    $ils_monthly = fetch_all($conn, "SELECT MONTH(created_at) as month, COUNT(*) as count FROM ils 
                             WHERE YEAR(created_at) = '$current_year' 
                             GROUP BY MONTH(created_at)");
-foreach ($ils_monthly as $row) {
-    $ils_trends[$row['month'] - 1] = (int)$row['count'];
+    foreach ($ils_monthly as $row) {
+        $ils_trends[$row['month'] - 1] = (int)$row['count'];
+    }
 }
 
-// Populate quest trends
-$questConn = connectQuestDB();
-$quest_monthly = fetch_all($questConn, "SELECT MONTH(created_at) as month, COUNT(*) as count FROM schools 
+// Populate quest trends - only if user has access
+if (in_array('quest', $viewable_events)) {
+    $questConn = connectQuestDB();
+    $quest_monthly = fetch_all($questConn, "SELECT MONTH(created_at) as month, COUNT(*) as count FROM schools 
                             WHERE YEAR(created_at) = '$current_year' 
                             GROUP BY MONTH(created_at)");
-foreach ($quest_monthly as $row) {
-    $quest_trends[$row['month'] - 1] = (int)$row['count'];
+    foreach ($quest_monthly as $row) {
+        $quest_trends[$row['month'] - 1] = (int)$row['count'];
+    }
+    $questConn->close();
 }
-$questConn->close();
 
 // Month names
 $month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -201,7 +247,7 @@ $month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 <div class="container-fluid">
     <!-- Stats Cards -->
     <div class="row mb-4">
-
+        <?php if (in_array('conclaves', $viewable_events)): ?>
         <div class="col-md-4 col-xl-3">
             <div class="stats-card text-center">
                 <i class="fas fa-comments"></i>
@@ -209,6 +255,9 @@ $month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
                 <p>IPN Conclaves</p>
             </div>
         </div>
+        <?php endif; ?>
+        
+        <?php if (in_array('yuva', $viewable_events)): ?>
         <div class="col-md-4 col-xl-3">
             <div class="stats-card text-center">
                 <i class="fas fa-graduation-cap"></i>
@@ -216,6 +265,9 @@ $month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
                 <p>Yuva Summit</p>
             </div>
         </div>
+        <?php endif; ?>
+        
+        <?php if (in_array('leaderssummit', $viewable_events)): ?>
         <div class="col-md-4 col-xl-3">
             <div class="stats-card text-center">
                 <i class="fas fa-globe-asia"></i>
@@ -223,6 +275,9 @@ $month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
                 <p>Leaders Summit Nepal</p>
             </div>
         </div>
+        <?php endif; ?>
+        
+        <?php if (in_array('misb', $viewable_events)): ?>
         <div class="col-md-4 col-xl-3">
             <div class="stats-card text-center">
                 <i class="fas fa-award"></i>
@@ -230,6 +285,9 @@ $month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
                 <p>Impactful Schools</p>
             </div>
         </div>
+        <?php endif; ?>
+        
+        <?php if (in_array('ils', $viewable_events)): ?>
         <div class="col-md-4 col-xl-3">
             <div class="stats-card text-center">
                 <i class="fas fa-landmark"></i>
@@ -237,6 +295,9 @@ $month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
                 <p>IPN Leadership</p>
             </div>
         </div>
+        <?php endif; ?>
+        
+        <?php if (in_array('quest', $viewable_events)): ?>
         <div class="col-md-4 col-xl-3">
             <div class="stats-card text-center">
                 <i class="fas fa-trophy"></i>
@@ -244,6 +305,8 @@ $month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
                 <p>Quest 2025</p>
             </div>
         </div>
+        <?php endif; ?>
+        
         <div class="col-md-4 col-xl-6">
             <div class="stats-card text-center">
                 <i class="fas fa-users"></i>
@@ -276,10 +339,29 @@ $month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
                                 $max_month_index = 0;
                                 $total_registrations = 0;
                                 
-                                // Find max month across all event types
+                                // Find max month across all viewable event types
                                 for ($i = 0; $i < 12; $i++) {
-                                    $month_total = $conclave_trends[$i] + $yuva_trends[$i] + $leaderssummit_trends[$i] + 
-                                                  $misb_trends[$i] + $ils_trends[$i] + $quest_trends[$i];
+                                    $month_total = 0;
+                                    
+                                    if (in_array('conclaves', $viewable_events)) {
+                                        $month_total += $conclave_trends[$i];
+                                    }
+                                    if (in_array('yuva', $viewable_events)) {
+                                        $month_total += $yuva_trends[$i];
+                                    }
+                                    if (in_array('leaderssummit', $viewable_events)) {
+                                        $month_total += $leaderssummit_trends[$i];
+                                    }
+                                    if (in_array('misb', $viewable_events)) {
+                                        $month_total += $misb_trends[$i];
+                                    }
+                                    if (in_array('ils', $viewable_events)) {
+                                        $month_total += $ils_trends[$i];
+                                    }
+                                    if (in_array('quest', $viewable_events)) {
+                                        $month_total += $quest_trends[$i];
+                                    }
+                                    
                                     $total_registrations += $month_total;
                                     
                                     if ($month_total > $max_month_value) {
@@ -296,19 +378,36 @@ $month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
                             <div class="small text-muted mb-1">Top event:</div>
                             <div class="h6 mb-3">
                                 <?php
-                                $event_totals = [
-                                    'IPN Conclaves' => array_sum($conclave_trends),
-                                    'Yuva Summit' => array_sum($yuva_trends),
-                                    'Nepal Summit' => array_sum($leaderssummit_trends),
-                                    'Impactful Schools' => array_sum($misb_trends),
-                                    'IPN Leadership' => array_sum($ils_trends),
-                                    'Quest 2025' => array_sum($quest_trends)
-                                ];
-                                arsort($event_totals);
-                                $top_event = key($event_totals);
-                                $top_count = current($event_totals);
+                                $event_totals = [];
                                 
-                                echo $top_event . ' (' . $top_count . ')';
+                                if (in_array('conclaves', $viewable_events)) {
+                                    $event_totals['IPN Conclaves'] = array_sum($conclave_trends);
+                                }
+                                if (in_array('yuva', $viewable_events)) {
+                                    $event_totals['Yuva Summit'] = array_sum($yuva_trends);
+                                }
+                                if (in_array('leaderssummit', $viewable_events)) {
+                                    $event_totals['Nepal Summit'] = array_sum($leaderssummit_trends);
+                                }
+                                if (in_array('misb', $viewable_events)) {
+                                    $event_totals['Impactful Schools'] = array_sum($misb_trends);
+                                }
+                                if (in_array('ils', $viewable_events)) {
+                                    $event_totals['IPN Leadership'] = array_sum($ils_trends);
+                                }
+                                if (in_array('quest', $viewable_events)) {
+                                    $event_totals['Quest 2025'] = array_sum($quest_trends);
+                                }
+                                
+                                if (!empty($event_totals)) {
+                                    arsort($event_totals);
+                                    $top_event = key($event_totals);
+                                    $top_count = current($event_totals);
+                                    
+                                    echo $top_event . ' (' . $top_count . ')';
+                                } else {
+                                    echo 'No data available';
+                                }
                                 ?>
                             </div>
                         </div>
@@ -331,12 +430,24 @@ $month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
                     <div>
                         <select class="form-select form-select-sm" id="recentRegistrationsSelect">
                             <option value="all" selected>All Events</option>
+                            <?php if (in_array('conclaves', $viewable_events)): ?>
                             <option value="conclaves">IPN Conclaves</option>
+                            <?php endif; ?>
+                            <?php if (in_array('yuva', $viewable_events)): ?>
                             <option value="yuva">Yuva Summit</option>
+                            <?php endif; ?>
+                            <?php if (in_array('leaderssummit', $viewable_events)): ?>
                             <option value="leaderssummit">Nepal Summit</option>
+                            <?php endif; ?>
+                            <?php if (in_array('misb', $viewable_events)): ?>
                             <option value="misb">Impactful Schools</option>
+                            <?php endif; ?>
+                            <?php if (in_array('ils', $viewable_events)): ?>
                             <option value="ils">IPN Leadership</option>
+                            <?php endif; ?>
+                            <?php if (in_array('quest', $viewable_events)): ?>
                             <option value="quest">Quest 2025</option>
+                            <?php endif; ?>
                         </select>
                     </div>
                 </div>
@@ -667,58 +778,80 @@ $month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 document.addEventListener('DOMContentLoaded', function() {
     const ctx = document.getElementById('registrationTrendsChart').getContext('2d');
     
+    <?php
+    // Build datasets array in PHP first
+    $datasets = [];
+    
+    if (in_array('conclaves', $viewable_events)) {
+        $datasets[] = [
+            'label' => 'IPN Conclaves',
+            'data' => $conclave_trends,
+            'backgroundColor' => 'rgba(63, 81, 181, 0.2)',
+            'borderColor' => 'rgba(63, 81, 181, 1)',
+            'borderWidth' => 2,
+            'tension' => 0.4
+        ];
+    }
+    
+    if (in_array('yuva', $viewable_events)) {
+        $datasets[] = [
+            'label' => 'Yuva Summit',
+            'data' => $yuva_trends,
+            'backgroundColor' => 'rgba(76, 175, 80, 0.2)',
+            'borderColor' => 'rgba(76, 175, 80, 1)',
+            'borderWidth' => 2,
+            'tension' => 0.4
+        ];
+    }
+    
+    if (in_array('leaderssummit', $viewable_events)) {
+        $datasets[] = [
+            'label' => 'Nepal Summit',
+            'data' => $leaderssummit_trends,
+            'backgroundColor' => 'rgba(33, 150, 243, 0.2)',
+            'borderColor' => 'rgba(33, 150, 243, 1)',
+            'borderWidth' => 2,
+            'tension' => 0.4
+        ];
+    }
+    
+    if (in_array('misb', $viewable_events)) {
+        $datasets[] = [
+            'label' => 'Impactful Schools',
+            'data' => $misb_trends,
+            'backgroundColor' => 'rgba(255, 193, 7, 0.2)',
+            'borderColor' => 'rgba(255, 193, 7, 1)',
+            'borderWidth' => 2,
+            'tension' => 0.4
+        ];
+    }
+    
+    if (in_array('ils', $viewable_events)) {
+        $datasets[] = [
+            'label' => 'IPN Leadership',
+            'data' => $ils_trends,
+            'backgroundColor' => 'rgba(244, 67, 54, 0.2)',
+            'borderColor' => 'rgba(244, 67, 54, 1)',
+            'borderWidth' => 2,
+            'tension' => 0.4
+        ];
+    }
+    
+    if (in_array('quest', $viewable_events)) {
+        $datasets[] = [
+            'label' => 'Quest 2025',
+            'data' => $quest_trends,
+            'backgroundColor' => 'rgba(156, 39, 176, 0.2)',
+            'borderColor' => 'rgba(156, 39, 176, 1)',
+            'borderWidth' => 2,
+            'tension' => 0.4
+        ];
+    }
+    ?>
+    
     const data = {
         labels: <?php echo json_encode($month_names); ?>,
-        datasets: [
-            {
-                label: 'IPN Conclaves',
-                data: <?php echo json_encode($conclave_trends); ?>,
-                backgroundColor: 'rgba(63, 81, 181, 0.2)',
-                borderColor: 'rgba(63, 81, 181, 1)',
-                borderWidth: 2,
-                tension: 0.4
-            },
-            {
-                label: 'Yuva Summit',
-                data: <?php echo json_encode($yuva_trends); ?>,
-                backgroundColor: 'rgba(76, 175, 80, 0.2)',
-                borderColor: 'rgba(76, 175, 80, 1)',
-                borderWidth: 2,
-                tension: 0.4
-            },
-            {
-                label: 'Nepal Summit',
-                data: <?php echo json_encode($leaderssummit_trends); ?>,
-                backgroundColor: 'rgba(33, 150, 243, 0.2)',
-                borderColor: 'rgba(33, 150, 243, 1)',
-                borderWidth: 2,
-                tension: 0.4
-            },
-            {
-                label: 'Impactful Schools',
-                data: <?php echo json_encode($misb_trends); ?>,
-                backgroundColor: 'rgba(255, 193, 7, 0.2)',
-                borderColor: 'rgba(255, 193, 7, 1)',
-                borderWidth: 2,
-                tension: 0.4
-            },
-            {
-                label: 'IPN Leadership',
-                data: <?php echo json_encode($ils_trends); ?>,
-                backgroundColor: 'rgba(244, 67, 54, 0.2)',
-                borderColor: 'rgba(244, 67, 54, 1)',
-                borderWidth: 2,
-                tension: 0.4
-            },
-            {
-                label: 'Quest 2025',
-                data: <?php echo json_encode($quest_trends); ?>,
-                backgroundColor: 'rgba(156, 39, 176, 0.2)',
-                borderColor: 'rgba(156, 39, 176, 1)',
-                borderWidth: 2,
-                tension: 0.4
-            }
-        ]
+        datasets: <?php echo json_encode($datasets); ?>
     };
     
     const config = {

@@ -2,6 +2,18 @@
 // Include header
 include 'includes/header.php';
 
+// Check if user has permission to view leaderssummit data
+if (!canViewEvent('leaderssummit')) {
+    echo '<div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            You do not have permission to view Leaderssummit data. 
+            Please contact an administrator if you need access.
+          </div>';
+    include 'includes/footer.php';
+    exit();
+}
+
+
 // Check if viewing a specific registration
 if (isset($_GET['id'])) {
     $id = (int)$_GET['id'];
@@ -192,9 +204,11 @@ foreach ($monthly_trend as $row) {
     <div class="row mb-4">
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
+          
                     <h5 class="mb-0">Registrations by City</h5>
-                </div>
+    
+        </div>
                 <div class="card-body">
                     <canvas id="cityChart" height="250"></canvas>
                 </div>
@@ -202,9 +216,13 @@ foreach ($monthly_trend as $row) {
         </div>
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
+        
                     <h5 class="mb-0">Registrations by Designation</h5>
-                </div>
+    
+            
+
+        </div>
                 <div class="card-body">
                     <canvas id="designationChart" height="250"></canvas>
                 </div>
@@ -214,7 +232,7 @@ foreach ($monthly_trend as $row) {
     
     <!-- Filter Card -->
     <div class="card mb-4">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Filter Registrations</h5>
         </div>
         <div class="card-body">
@@ -278,8 +296,9 @@ foreach ($monthly_trend as $row) {
     
     <!-- Data Table -->
     <div class="card">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Nepal Summit Nepal Registrations</h5>
+            
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -411,6 +430,68 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+    // Initialize DataTable with export buttons
+    var table = $('.datatable-export').DataTable({
+        dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+             "<'row'<'col-sm-12'tr>>" +
+             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        order: [[7, 'desc']], // Sort by date
+        responsive: true,
+        buttons: [
+            {
+                extend: 'csvHtml5',
+                text: 'Export CSV',
+                filename: 'leaderssummit_export_<?php echo date("Y-m-d"); ?>',
+                className: 'd-none',
+                exportOptions: {
+                    columns: 'visible'
+                }
+            },
+            {
+                extend: 'pdfHtml5',
+                text: 'Export PDF',
+                filename: 'leaderssummit_export_<?php echo date("Y-m-d"); ?>',
+                className: 'd-none',
+                exportOptions: {
+                    columns: 'visible'
+                },
+                customize: function(doc) {
+                    doc.content.splice(0, 1, {
+                        text: 'IPN Foundation - Leaderssummit Registrations',
+                        fontSize: 16,
+                        alignment: 'center',
+                        margin: [0, 0, 0, 12]
+                    });
+                }
+            },
+            {
+                extend: 'excelHtml5',
+                text: 'Export Excel',
+                filename: 'leaderssummit_export_<?php echo date("Y-m-d"); ?>',
+                className: 'd-none',
+                exportOptions: {
+                    columns: 'visible'
+                }
+            }
+        ]
+    });
+    
+    <?php if (canExportEvent('leaderssummit')): ?>
+    // Bind export buttons
+    document.getElementById('exportCSV').addEventListener('click', function() {
+        table.button('.buttons-csv').trigger();
+    });
+    
+    document.getElementById('exportPDF').addEventListener('click', function() {
+        table.button('.buttons-pdf').trigger();
+    });
+    
+    document.getElementById('exportExcel').addEventListener('click', function() {
+        table.button('.buttons-excel').trigger();
+    });
+    <?php endif; ?>
 </script>
 <?php endif; ?>
 
