@@ -3,11 +3,20 @@
 include 'includes/header.php';
 
 // Get total counts by event type
-$conclave_count = count_rows($conn, "SELECT COUNT(*) FROM conclaves");
-$yuva_count = count_rows($conn, "SELECT COUNT(*) FROM yuva");
-$leaderssummit_count = count_rows($conn, "SELECT COUNT(*) FROM leaderssummit");
-$misb_count = count_rows($conn, "SELECT COUNT(*) FROM misb");
-$ils_count = count_rows($conn, "SELECT COUNT(*) FROM ils");
+$result = $conn->query("SELECT COUNT(*) as count FROM conclaves");
+$conclave_count = $result->fetch_assoc()['count'];
+
+$result = $conn->query("SELECT COUNT(*) as count FROM yuva");
+$yuva_count = $result->fetch_assoc()['count'];
+
+$result = $conn->query("SELECT COUNT(*) as count FROM leaderssummit");
+$leaderssummit_count = $result->fetch_assoc()['count'];
+
+$result = $conn->query("SELECT COUNT(*) as count FROM misb");
+$misb_count = $result->fetch_assoc()['count'];
+
+$result = $conn->query("SELECT COUNT(*) as count FROM ils");
+$ils_count = $result->fetch_assoc()['count'];
 
 // Get Quest count from different database using the centralized function
 $questConn = connectQuestDB();
