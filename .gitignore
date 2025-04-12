@@ -25,3 +25,5 @@ Thumbs.db
 prompts
 
 includes/logs/*
+
+includes/logs/activity_*
